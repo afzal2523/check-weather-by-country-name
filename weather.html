@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+    <style>
+        .result {
+            display: none;
+        }
+
+        .btn {
+            background-color: #a81010;
+            color: #fff;
+            margin: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container " style="margin-top: 10px;">
+
+
+
+        <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-6 " style="border-radius: 5px; padding: 20px; background-color: #2e7fa1; color: #fff;">
+
+                <div class="row query text-center">
+                    <h1>Check Weather By Country Name</h1>
+                    <div class="col-md-3"></div>
+                    <div class="col-md-6 text-center">
+
+                        <div><input type="text" class="inputBox form-control" placeholder="Enter City Name"></div>
+                        <button class="btn btn-darger" style="margin: 20px;">Check</button>
+                    </div>
+                    <div class="col-md-3"></div>
+                </div>
+
+
+                <div class="row result">
+                    <div class="col-md-4 text-left cityTimeDate">
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <div style="display: flex;">
+                            <img src="" class ="temp-img" alt="" width="50" style="margin-top: 10px;">
+                            <h1>
+                                <span class="temp"></span><span style="font-size: 16px;">°C</span>
+                            </h1>
+                            
+                        </div>
+                        <h6 class="weather"></h6>
+                    </div>
+                    <div class="col-md-4 text-right humidityWind">
+                    
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3"></div>
+                    <div class="col-md-3"></div>
+                    <div class="col-md-3"></div>
+                    <div class="col-md-3"></div>
+                </div>
+            </div>
+            <div class="col-md-3"></div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+</body>
+<script>
+    const span = document.createElement("span");
+    const inputBox = document.querySelector(".inputBox");
+    const btn = document.querySelector(".btn");
+    const tempImg = document.querySelector(".temp-img");
+    const temp = document.querySelector(".temp");
+    const weather = document.querySelector(".weather");
+
+    const query = document.querySelector(".query");
+    const result = document.querySelector(".result");
+
+    const cityTimeDate = document.querySelector(".cityTimeDate");
+    const humidityWind = document.querySelector(".humidityWind");
+
+    
+
+    btn.addEventListener("click", async () => {
+
+        if(inputBox.value === ""){
+            span.innerText = "Enter City Name";
+            span.style.color = "#a00f0f";
+            span.style.padding = "20px";
+            inputBox.before(span);
+            return false;
+
+        }
+        span.remove();
+
+        query.style.display = "none";
+        result.style.display = "block";
+
+        const URL = `https://api.openweathermap.org/data/2.5/weather?q=${inputBox.value}&appid=e4611e8146bcbd2d469606d472d8d3d5&units=metric`;
+
+        let response = await fetch(URL);
+        let data = await response.json();
+
+        temp.innerText = Math.round(data.main.temp);
+        weather.innerText = data.weather[0].main;
+
+        tempImg.src = `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
+
+        cityTimeDate.innerHTML =
+        `<button class="btn backBtn" onclick='backbtnn();'>Back</button><br>
+        <span class="city">${data.name}, ${data.sys.country}</span><br>
+        <span class="date">${Date().slice(0, 16)}</span>
+        <span class="time"></span>`;
+
+
+        humidityWind.innerHTML =
+        `<span class="humidity">Humidity: ${data.main.humidity}</span><br>
+        <span class="wind">Wind: ${data.wind.speed}</span><br>
+        <span class="high">High: ${data.main.temp_max}</span><br>
+        <span class="low">Low: ${data.main.temp_min}</span><br>`;
+
+
+        inputBox.value = "";
+        console.log(data);
+    });
+
+
+    function backbtnn(){
+        query.style.display = "block";
+        result.style.display = "none";
+       } 
+
+
+</script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+</html>
